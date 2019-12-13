@@ -39,7 +39,7 @@ Now the directory `build` contains the task producer application `txp.jar` and t
 #### Setup RabbitMQ
 
 ##### Producer side
-Install a RabbitMQ server on MASTER.
+Install a RabbitMQ server
 
 ```
 sudo apt install rabbitmq-server
