@@ -12,7 +12,7 @@ Note that taskmixer does not handle the sharing of data but just the dispatch of
 To share data you might use NFS.
 
 #### How to build the applications
-'''
+```
 git clone https://github.com/acco93/taskmixer.git
 
 cd taskmixer
@@ -32,7 +32,7 @@ cd ..
 mkdir -p build
 cp taskmixer.producer/build/libs/txp-1.0.jar build/txp.jar
 cp taskmixer.consumer/build/libs/txc-1.0.jar build/txc.jar
-'''
+```
 
 Now the directory `build` contains the task producer application `txp.jar` and the task consumer application `txc.jar`
 
@@ -59,7 +59,7 @@ Now you can send tasks to the queue from any machine in the local network by run
 java -jar txp.jar -u username -p password -i 192.168.xxx.xxx -c "ls -l"
 ```
 
-The above line sends the task `ls -l` to a RabbitMQ server located at IP 192.168.xxx.xxx
+The above line sends the task `ls -l` to a RabbitMQ server located at IP `192.168.xxx.xxx`
 
 ##### Consumer side
 We can wait for tasks by using
