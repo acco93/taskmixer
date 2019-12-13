@@ -1,0 +1,3 @@
+include ":taskmixer.common"
+project(":taskmixer.common").projectDir = file("../taskmixer.common")
+

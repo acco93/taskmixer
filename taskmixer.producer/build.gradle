@@ -1,0 +1,44 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'application'
+
+mainClassName = 'taskmixer.producer.Producer'
+
+repositories {
+      mavenCentral()
+}
+
+sourceSets {
+	main {
+		java {
+			srcDirs = ['src']
+		}
+	}
+}
+
+jar {
+	baseName = 'txp'
+    version =  '1.0'
+   	manifest {
+      attributes 'Main-Class': 'taskmixer.producer.Producer'
+   }
+   from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+distributions {
+    main{
+        baseName = "$mainClassName"
+    }
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+	compile 'com.rabbitmq:amqp-client:5.7.3'
+	compile group: 'com.google.code.gson', name: 'gson', version: '1.7.2'
+	compile 'info.picocli:picocli:4.1.2'
+	compile project(':taskmixer.common')	
+}

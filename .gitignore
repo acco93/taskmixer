@@ -1,0 +1,8 @@
+.metadata/*
+bin/
+builds/
+build/
+.gradle/
+.project
+.settings/
+.classpath
