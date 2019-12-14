@@ -5,13 +5,17 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.concurrent.TimeoutException;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DeliverCallback;
+import com.rabbitmq.client.MessageProperties;
 
 import taskmixer.common.concept.ActiveEntity;
 import taskmixer.common.log.Logger;
+import taskmixer.common.message.Message;
 import taskmixer.common.sharedknowledge.R;
 
 public class TasksReceiver extends ActiveEntity {
@@ -52,18 +56,33 @@ public class TasksReceiver extends ActiveEntity {
 		    channel.basicQos(1);
 
 		    DeliverCallback deliverCallback = (consumerTag, delivery) -> {
-		        String command = new String(delivery.getBody(), "UTF-8");
+		    	
+		    	String string = new String(delivery.getBody(), "UTF-8");
 
-		        Logger.getInstance().info("received '" + command + "'");
+				Gson gson = new GsonBuilder().create();
+				Message message = gson.fromJson(string, Message.class);
+
+		   
+		        Logger.getInstance().info("received '" + message.getMessage() + "'");
 		        try {
 		        	
-		        	
-		            Process process = Runtime.getRuntime().exec(command);
+		        	String[] commands = { "/bin/bash", "-c", message.getMessage() };		        	
+		            Process process = Runtime.getRuntime().exec(commands);
+		            
+		            StringBuilder output = new StringBuilder();
+		            
 			        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-			        while ((reader.readLine()) != null) {}
+			        String line;
+					while ((line = reader.readLine()) != null) {
+						output.append(line+"\n");
+					}
 			        process.waitFor();
 			        
-		        	
+			        if(message.isProducerWaitingForReply()) {
+				        channel.basicPublish("", message.getReplyQueue(), MessageProperties.PERSISTENT_TEXT_PLAIN, output.toString().getBytes("UTF-8"));
+			        }
+
+
 		        	
 		        } catch (Exception e) {
 					
