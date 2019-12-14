@@ -61,7 +61,7 @@ java -jar txp.jar -u username -p password -i 192.168.xxx.xxx -c "ls -l"
 
 The above line sends the task `ls -l` to a RabbitMQ server located at IP `192.168.xxx.xxx`
 
-By specifying the `-w` flag, the producer will wait for results printed to the standard output due to the command, if any.
+By specifying the `-w` flag, the producer can wait for results printed to the standard output due to the command, if any.
 
 ```
 java -jar txp.jar -u username -p password -i 192.168.xxx.xxx -c "sleep 5 && ls -l" -w
