@@ -1,6 +1,6 @@
 #### Taskmixer
 
-A simple solution to dispatch command strings over a local network by using RabbitMQ.
+A simple solution to dispatch command strings over a local network using RabbitMQ.
 
 In taskmixer we have a command producer (see `taskmixer.producer` project) that simply appends a string command to a RabbitMQ queue, and one or more command consumers (see `taskmixer.consumer` project) that wait for commands and execute them upon receipt. In the following we will call *task* a command string such as `ls -l`.
 
@@ -61,7 +61,7 @@ java -jar txp.jar -u username -p password -i 192.168.xxx.xxx -c 'ls -l'
 
 The above line sends the task `ls -l` to a RabbitMQ server located at IP `192.168.xxx.xxx`
 
-By specifying the `-w` flag, the producer will wait for results printed to the standard output due to the command, if any.
+By specifying the `-w` flag, the producer can wait for results printed to the standard output due to the command, if any.
 
 ```
 java -jar txp-1.0.jar -u username -p password -i 192.168.xxx.xxx -c 'i=0; while [ $i -lt 10 ]; do echo $i; sleep 1; i=$[$i+1]; done' -w
