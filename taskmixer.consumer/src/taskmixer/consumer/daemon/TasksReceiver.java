@@ -15,7 +15,8 @@ import com.rabbitmq.client.MessageProperties;
 
 import taskmixer.common.concept.ActiveEntity;
 import taskmixer.common.log.Logger;
-import taskmixer.common.message.Message;
+import taskmixer.common.message.StandardOutputLine;
+import taskmixer.common.message.StringCommand;
 import taskmixer.common.sharedknowledge.R;
 
 public class TasksReceiver extends ActiveEntity {
@@ -60,7 +61,7 @@ public class TasksReceiver extends ActiveEntity {
 		    	String string = new String(delivery.getBody(), "UTF-8");
 
 				Gson gson = new GsonBuilder().create();
-				Message message = gson.fromJson(string, Message.class);
+				StringCommand message = gson.fromJson(string, StringCommand.class);
 
 		   
 		        Logger.getInstance().info("received '" + message.getMessage() + "'");
@@ -68,19 +69,24 @@ public class TasksReceiver extends ActiveEntity {
 		        	
 		        	String[] commands = { "/bin/bash", "-c", message.getMessage() };		        	
 		            Process process = Runtime.getRuntime().exec(commands);
-		            
-		            StringBuilder output = new StringBuilder();
+		           
 		            
 			        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 			        String line;
 					while ((line = reader.readLine()) != null) {
-						output.append(line+"\n");
+						
+						if(message.isProducerWaitingForReply()) {
+							
+							StandardOutputLine messageLine = new StandardOutputLine(line, false);
+							String json = gson.toJson(messageLine);
+							channel.basicPublish("", message.getReplyQueue(), MessageProperties.PERSISTENT_TEXT_PLAIN, json.toString().getBytes("UTF-8"));
+							
+						}
+						
 					}
 			        process.waitFor();
 			        
-			        if(message.isProducerWaitingForReply()) {
-				        channel.basicPublish("", message.getReplyQueue(), MessageProperties.PERSISTENT_TEXT_PLAIN, output.toString().getBytes("UTF-8"));
-			        }
+			        channel.basicPublish("", message.getReplyQueue(), MessageProperties.PERSISTENT_TEXT_PLAIN, gson.toJson(new StandardOutputLine("", true)).toString().getBytes("UTF-8"));
 
 
 		        	

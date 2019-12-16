@@ -1,11 +1,11 @@
 package taskmixer.common.message;
 
-public class Message {
+public class StringCommand {
 
 	private String message;
 	private String replyQueue;
 	
-	public Message(String message, String replyQueue) {
+	public StringCommand(String message, String replyQueue) {
 		
 		this.message = message;
 		this.replyQueue = replyQueue;

@@ -14,7 +14,8 @@ import com.rabbitmq.client.MessageProperties;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
-import taskmixer.common.message.Message;
+import taskmixer.common.message.StandardOutputLine;
+import taskmixer.common.message.StringCommand;
 import taskmixer.common.sharedknowledge.R;
 
 
@@ -56,7 +57,7 @@ public class Producer implements Callable<Integer>  {
 
         String replyQueue = channel.queueDeclare().getQueue();
         
-        Message message = new Message(command, waitForReply ? replyQueue : "");
+        StringCommand message = new StringCommand(command, waitForReply ? replyQueue : "");
         
 		Gson gson = new GsonBuilder().create();
 		String json = gson.toJson(message);
@@ -66,17 +67,28 @@ public class Producer implements Callable<Integer>  {
         if (waitForReply) {
         		
             DeliverCallback deliverCallback = (consumerTag, delivery) -> {
-                String result = new String(delivery.getBody(), "UTF-8");
-                System.out.println(result);
+
+                String string = new String(delivery.getBody(), "UTF-8");
+
+				StandardOutputLine line = gson.fromJson(string, StandardOutputLine.class);
                 
-                try {
-                	channel.queueDelete(replyQueue);
-					channel.close();
-					connection.close();
-				} catch (TimeoutException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				if(line.isEndOfContent()) {
+
+	                try {
+	                	channel.queueDelete(replyQueue);
+						channel.close();
+						connection.close();
+					} catch (TimeoutException e) {
+						e.printStackTrace();
+					}
+					
+				} else {
+					
+					System.out.println(line.getLine());
+					
 				}
+				
+
                 
             };
             channel.basicConsume(replyQueue, true, deliverCallback, consumerTag -> { });

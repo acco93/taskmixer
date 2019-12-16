@@ -56,7 +56,7 @@ Check https://www.rabbitmq.com/rabbitmqctl.8.html#User_Management for more detai
 Now you can send tasks to the queue from any machine in the local network by running
 
 ```
-java -jar txp.jar -u username -p password -i 192.168.xxx.xxx -c "ls -l"
+java -jar txp.jar -u username -p password -i 192.168.xxx.xxx -c 'ls -l'
 ```
 
 The above line sends the task `ls -l` to a RabbitMQ server located at IP `192.168.xxx.xxx`
@@ -64,7 +64,7 @@ The above line sends the task `ls -l` to a RabbitMQ server located at IP `192.16
 By specifying the `-w` flag, the producer will wait for results printed to the standard output due to the command, if any.
 
 ```
-java -jar txp.jar -u username -p password -i 192.168.xxx.xxx -c "sleep 5 && ls -l" -w
+java -jar txp-1.0.jar -u username -p password -i 192.168.xxx.xxx -c 'i=0; while [ $i -lt 10 ]; do echo $i; sleep 1; i=$[$i+1]; done' -w
 ```
 
 ##### Consumer side
