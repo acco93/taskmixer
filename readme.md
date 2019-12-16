@@ -1,6 +1,6 @@
 #### Taskmixer
 
-A simple solution to dispatch command strings over a local network by using RabbitMQ.
+A simple solution to dispatch command strings over a local network using RabbitMQ.
 
 In taskmixer we have a command producer (see `taskmixer.producer` project) that simply appends a string command to a RabbitMQ queue, and one or more command consumers (see `taskmixer.consumer` project) that wait for commands and execute them upon receipt. In the following we will call *task* a command string such as `ls -l`.
 
