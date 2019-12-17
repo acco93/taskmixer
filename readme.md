@@ -67,6 +67,13 @@ By specifying the `-w` flag, the producer can wait for results printed to the st
 java -jar txp-1.0.jar -u username -p password -i 192.168.xxx.xxx -c 'i=0; while [ $i -lt 10 ]; do echo $i; sleep 1; i=$[$i+1]; done' -w
 ```
 
+By using the `-b` flag, the command is broadcast to all available consumers.
+```
+java -jar txp-1.0.jar -u username -p password -i 192.168.xxx.xxx -c 'ls -l' -b
+```
+
+Note that `-w` and `-b` together are currently not supported,
+
 ##### Consumer side
 We can wait for tasks by using
 

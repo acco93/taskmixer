@@ -46,4 +46,11 @@ public class Logger implements LoggerInterface {
 		System.err.println("["+date+"] ["+className+"] " + message);
 	}
 
+	@Override
+	public void warning(String message) {
+		String className = this.getClassName();
+		String date = this.getDate();
+		System.err.println("["+date+"] ["+className+"] WARNING: " + message);
+	}
+
 }

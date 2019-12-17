@@ -14,6 +14,7 @@ import com.rabbitmq.client.MessageProperties;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
+import taskmixer.common.log.Logger;
 import taskmixer.common.message.StandardOutputLine;
 import taskmixer.common.message.StringCommand;
 import taskmixer.common.sharedknowledge.R;
@@ -34,8 +35,11 @@ public class Producer implements Callable<Integer>  {
 	@Option(names = {"-c", "--command"}, description = "Command to send", required = true)
 	private String command;
 		
-	@Option(names = {"-w", "--wait"}, description = "Wait for reply, if any") 
+	@Option(names = {"-w", "--wait"}, description = "Waits for reply, if any") 
 	boolean waitForReply;
+	
+	@Option(names = {"-b", "--broadcast"}, description = "Sends to all currently available consumers")
+	boolean broadcast;
 	
 	public static void main(String... args) {
         new CommandLine(new Producer()).execute(args);
@@ -53,56 +57,102 @@ public class Producer implements Callable<Integer>  {
 		
 		Connection connection = factory.newConnection();
 		Channel channel = connection.createChannel();
-        channel.queueDeclare(R.TASK_QUEUE_NAME, true, false, false, null);
 
-        String replyQueue = channel.queueDeclare().getQueue();
-        
+		String replyQueue = "";
+		if(waitForReply) {
+			replyQueue = channel.queueDeclare().getQueue();
+		} 
+		
         StringCommand message = new StringCommand(command, waitForReply ? replyQueue : "");
-        
+		
 		Gson gson = new GsonBuilder().create();
 		String json = gson.toJson(message);
         
-        channel.basicPublish("", R.TASK_QUEUE_NAME, MessageProperties.PERSISTENT_TEXT_PLAIN, json.getBytes("UTF-8"));
-        
-        if (waitForReply) {
-        		
-            DeliverCallback deliverCallback = (consumerTag, delivery) -> {
-
-                String string = new String(delivery.getBody(), "UTF-8");
-
-				StandardOutputLine line = gson.fromJson(string, StandardOutputLine.class);
-                
-				if(line.isEndOfContent()) {
-
-	                try {
-	                	channel.queueDelete(replyQueue);
-						channel.close();
-						connection.close();
-					} catch (TimeoutException e) {
-						e.printStackTrace();
-					}
-					
-				} else {
-					
-					System.out.println(line.getLine());
-					
-				}
-				
-
-                
-            };
-            channel.basicConsume(replyQueue, true, deliverCallback, consumerTag -> { });
-        	
-        } else {
-        	
-        	channel.close();
-			connection.close();
-
-        	
-        }
-                
+		if(!broadcast) {
+			this.singleDelivery(json, connection, channel, replyQueue);
+		} else {
+			this.broadcastDelivery(json, connection, channel, replyQueue);
+		}                
 				
 		return 0;
+	}
+
+	private void broadcastDelivery(String json, Connection connection, Channel channel, String replyQueue) {
+
+		if(waitForReply) {
+			Logger.getInstance().warning("Broadcasting does not currently support '-w' ('--wait') flag");
+		}
+		
+		try {
+
+			channel.exchangeDeclare(R.TRANSIENT_BROADCAST, "fanout");
+		
+			channel.basicPublish(R.TRANSIENT_BROADCAST, "", null, json.getBytes("UTF-8"));
+			
+			channel.close();
+			connection.close();
+		
+		} catch (Exception e) {
+			Logger.getInstance().error(e.getMessage());
+		}
+		
+	}
+
+	private void singleDelivery(String json, Connection connection, Channel channel, String replyQueue) {
+
+				
+        try {
+        	
+			channel.queueDeclare(R.ROUND_ROBIN_QUEUE, true, false, false, null);
+	        
+	        channel.basicPublish("", R.ROUND_ROBIN_QUEUE, MessageProperties.PERSISTENT_TEXT_PLAIN, json.getBytes("UTF-8"));
+	        
+	        if (waitForReply) {
+	        		
+	            DeliverCallback deliverCallback = (consumerTag, delivery) -> {
+
+	                String string = new String(delivery.getBody(), "UTF-8");
+
+	        		Gson gson = new GsonBuilder().create();
+					StandardOutputLine line = gson.fromJson(string, StandardOutputLine.class);
+	                
+					if(line.isEndOfContent()) {
+
+		                try {
+		                	channel.queueDelete(replyQueue);
+							channel.close();
+							connection.close();
+						} catch (TimeoutException e) {
+				        	Logger.getInstance().error(e.getMessage());
+						}
+						
+					} else {
+						
+						System.out.println(line.getLine());
+						
+					}
+					
+
+	                
+	            };
+	            channel.basicConsume(replyQueue, true, deliverCallback, consumerTag -> { });
+	        	
+	        } else {
+	        	
+	        	channel.close();
+				connection.close();
+
+	        	
+	        }
+			
+        } catch (Exception e) {
+        	Logger.getInstance().error(e.getMessage());
+		} 
+        
+		
+
+		
+		
 	}
 
 }
