@@ -72,7 +72,7 @@ By using the `-b` flag, the command is broadcast to all available consumers.
 java -jar txp-1.0.jar -u username -p password -i 192.168.xxx.xxx -c 'ls -l' -b
 ```
 
-Note that `-w` and `-b` together are currently not supported,
+Note that `-w` and `-b` together are currently not supported.
 
 ##### Consumer side
 We can wait for tasks by using
