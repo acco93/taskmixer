@@ -33,9 +33,8 @@ public class Logger implements LoggerInterface {
 	
 	@Override
 	public void info(String message) {
-		String className = this.getClassName();
 		String date = this.getDate();
-		System.out.println("["+date+"] ["+className+"] " + message);
+		System.out.println("["+date+"] " + message);
 		
 	}
 
@@ -48,9 +47,8 @@ public class Logger implements LoggerInterface {
 
 	@Override
 	public void warning(String message) {
-		String className = this.getClassName();
 		String date = this.getDate();
-		System.err.println("["+date+"] ["+className+"] WARNING: " + message);
+		System.err.println("["+date+"] WARNING: " + message);
 	}
 
 }

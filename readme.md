@@ -81,3 +81,13 @@ We can wait for tasks by using
 java -jar txc.jar -u username -p password -i 192.168.xxx.xxx
 ```
 Consumers process one task at a time. RabbitMQ dispatches tasks to the first available consumer by following a round robin strategy.
+
+#### Convert to eclipse project
+The repository can be easily converted into an eclipse project by using gradle
+```
+cd taskmixer
+cd taskmixer.common/ && gradle eclipse && cd ..
+cd taskmixer.producer/ && gradle eclipse && cd ..
+cd taskmixer.consumer/ && gradle eclipse && cd ..
+```
+After that, go to eclipse File -> Import -> General -> Existing Projects into Workspace -> Select root directory browse selecting the git repository

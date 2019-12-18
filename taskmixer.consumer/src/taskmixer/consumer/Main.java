@@ -19,6 +19,8 @@ public class Main implements Callable<Integer>  {
 	@Option(names = {"-i", "--ip"}, description = "RabbitMQ IP address", required = true)
 	private String ip;
 	
+	@Option(names = {"-w", "--workers"}, defaultValue = "1", description = "Number of workers. Default is ${DEFAULT-VALUE}")
+	private int workers;
 	
 	public static void main(String... args) {
         new CommandLine(new Main()).execute(args);
@@ -28,7 +30,7 @@ public class Main implements Callable<Integer>  {
 	@Override
 	public Integer call() throws Exception {
 
-		new Consumer(username, password, ip);		
+		new Consumer(username, password, ip, workers);		
 		
 		return 0;
 	

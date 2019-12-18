@@ -1,15 +1,15 @@
 package taskmixer.consumer;
 
-import taskmixer.consumer.daemon.BroadcastReceiver;
-import taskmixer.consumer.daemon.TasksReceiver;
+import taskmixer.consumer.daemon.ControlDaemon;
+import taskmixer.consumer.daemon.TaskDaemon;
 
 public class Consumer {
 
 	
-	public Consumer(String username, String password, String ip) {
+	public Consumer(String username, String password, String ip, int workers) {
 		
-		new TasksReceiver(username, password, ip);
-		new BroadcastReceiver(username, password, ip);
+		new TaskDaemon(username, password, ip, workers);	
+		new ControlDaemon(username, password, ip);
 		
 	}
 

@@ -41,6 +41,9 @@ public class Producer implements Callable<Integer>  {
 	@Option(names = {"-b", "--broadcast"}, description = "Sends to all currently available consumers")
 	boolean broadcast;
 	
+	@Option(names = {"--control"}, description = "Sends a control message")
+	boolean control;
+	
 	public static void main(String... args) {
         new CommandLine(new Producer()).execute(args);
     }
@@ -71,23 +74,35 @@ public class Producer implements Callable<Integer>  {
 		if(!broadcast) {
 			this.singleDelivery(json, connection, channel, replyQueue);
 		} else {
-			this.broadcastDelivery(json, connection, channel, replyQueue);
+			this.broadcastDelivery(json, connection, channel);
 		}                
 				
 		return 0;
 	}
 
-	private void broadcastDelivery(String json, Connection connection, Channel channel, String replyQueue) {
+	private void broadcastDelivery(String json, Connection connection, Channel channel) {
 
 		if(waitForReply) {
 			Logger.getInstance().warning("Broadcasting does not currently support '-w' ('--wait') flag");
 		}
 		
+		String broadcastName;
+		
+		if(control) {
+			
+			broadcastName = R.CTRL_BROADCAST;
+			
+		} else {
+			
+			broadcastName = R.TRANSIENT_BROADCAST;
+			
+		}
+		
 		try {
 
-			channel.exchangeDeclare(R.TRANSIENT_BROADCAST, "fanout");
+			channel.exchangeDeclare(broadcastName, "fanout");
 		
-			channel.basicPublish(R.TRANSIENT_BROADCAST, "", null, json.getBytes("UTF-8"));
+			channel.basicPublish(broadcastName, "", null, json.getBytes("UTF-8"));
 			
 			channel.close();
 			connection.close();

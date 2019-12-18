@@ -13,3 +13,13 @@ sourceSets {
 		}
 	}
 }
+
+repositories {
+      mavenCentral()
+}
+
+dependencies {
+	compile 'com.rabbitmq:amqp-client:5.7.3'
+	compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.6.2'
+	compile group: 'com.google.code.gson', name: 'gson', version: '1.7.2'	
+}
