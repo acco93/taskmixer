@@ -17,7 +17,7 @@ git clone https://github.com/acco93/taskmixer.git
 
 cd taskmixer
 
-cd taskmixer.common
+cd taskmixer.core
 gradle build
 cd ../
 
@@ -56,7 +56,7 @@ Check https://www.rabbitmq.com/rabbitmqctl.8.html#User_Management for more detai
 Now you can send tasks to the queue from any machine in the local network by running
 
 ```
-java -jar txp.jar -u username -p password -i 192.168.xxx.xxx -c 'ls -l'
+java -jar txp.jar 'ls -l' -u username -p password -i 192.168.xxx.xxx
 ```
 
 The above line sends the task `ls -l` to a RabbitMQ server located at IP `192.168.xxx.xxx`
@@ -64,12 +64,12 @@ The above line sends the task `ls -l` to a RabbitMQ server located at IP `192.16
 By specifying the `-w` flag, the producer can wait for results printed to the standard output due to the command, if any.
 
 ```
-java -jar txp-1.0.jar -u username -p password -i 192.168.xxx.xxx -c 'i=0; while [ $i -lt 10 ]; do echo $i; sleep 1; i=$[$i+1]; done' -w
+java -jar txp-1.0.jar 'i=0; while [ $i -lt 10 ]; do echo $i; sleep 1; i=$[$i+1]; done' -u username -p password -i 192.168.xxx.xxx -w
 ```
 
 By using the `-b` flag, the command is broadcast to all available consumers.
 ```
-java -jar txp-1.0.jar -u username -p password -i 192.168.xxx.xxx -c 'ls -l' -b
+java -jar txp-1.0.jar 'ls -l' -u username -p password -i 192.168.xxx.xxx -b
 ```
 
 Note that `-w` and `-b` together are currently not supported.
@@ -86,7 +86,7 @@ Consumers process one task at a time. RabbitMQ dispatches tasks to the first ava
 The repository can be easily converted into an eclipse project by using gradle
 ```
 cd taskmixer
-cd taskmixer.common/ && gradle eclipse && cd ..
+cd taskmixer.core/ && gradle eclipse && cd ..
 cd taskmixer.producer/ && gradle eclipse && cd ..
 cd taskmixer.consumer/ && gradle eclipse && cd ..
 ```

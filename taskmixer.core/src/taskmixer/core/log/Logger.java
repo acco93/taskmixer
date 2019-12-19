@@ -1,4 +1,4 @@
-package taskmixer.common.log;
+package taskmixer.core.log;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

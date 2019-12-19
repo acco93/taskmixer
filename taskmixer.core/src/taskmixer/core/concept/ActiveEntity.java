@@ -1,4 +1,4 @@
-package taskmixer.common.concept;
+package taskmixer.core.concept;
 
 /**
  * Thread wrapper.

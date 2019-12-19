@@ -1,4 +1,4 @@
-package taskmixer.common.sharedknowledge;
+package taskmixer.core.sharedknowledge;
 
 public class R {
 

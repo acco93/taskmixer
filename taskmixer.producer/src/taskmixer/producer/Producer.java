@@ -1,5 +1,6 @@
 package taskmixer.producer;
 
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeoutException;
 
@@ -14,15 +15,21 @@ import com.rabbitmq.client.MessageProperties;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
-import taskmixer.common.log.Logger;
-import taskmixer.common.message.StandardOutputLine;
-import taskmixer.common.message.StringCommand;
-import taskmixer.common.sharedknowledge.R;
+import picocli.CommandLine.Parameters;
+import taskmixer.core.log.Logger;
+import taskmixer.core.message.StandardOutputLine;
+import taskmixer.core.message.StringCommand;
+import taskmixer.core.sharedknowledge.R;
 
 
 @Command(name = "txp", mixinStandardHelpOptions = true, version = "txp 1.0", description = "Sends a command to a RabbitMQ queue.")
 public class Producer implements Callable<Integer>  {
 
+	@Parameters(index = "0", description = "Command to send")
+	private String command;
+	
+	
+	
 	@Option(names = {"-u", "--username"}, description = "RabbitMQ username", required = true)
 	private String username;
 	
@@ -31,9 +38,6 @@ public class Producer implements Callable<Integer>  {
 	
 	@Option(names = {"-i", "--ip"}, description = "RabbitMQ IP address", required = true)
 	private String ip;
-	
-	@Option(names = {"-c", "--command"}, description = "Command to send", required = true)
-	private String command;
 		
 	@Option(names = {"-w", "--wait"}, description = "Waits for reply, if any") 
 	boolean waitForReply;
@@ -41,7 +45,7 @@ public class Producer implements Callable<Integer>  {
 	@Option(names = {"-b", "--broadcast"}, description = "Sends to all currently available consumers")
 	boolean broadcast;
 	
-	@Option(names = {"--control"}, description = "Sends a control message")
+	@Option(names = {"-c", "--control"}, description = "Sends a control message")
 	boolean control;
 	
 	public static void main(String... args) {

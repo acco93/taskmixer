@@ -41,5 +41,5 @@ dependencies {
 	compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.6.2'
 	compile group: 'com.google.code.gson', name: 'gson', version: '1.7.2'
 	compile 'info.picocli:picocli:4.1.2'
-	compile project(':taskmixer.common')	
+	compile project(':taskmixer.core')	
 }

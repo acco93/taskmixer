@@ -1,4 +1,4 @@
-package taskmixer.common.networking.factory;
+package taskmixer.core.networking.factory;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
@@ -12,7 +12,7 @@ import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.DeliverCallback;
 import com.rabbitmq.client.Envelope;
 
-import taskmixer.common.log.Logger;
+import taskmixer.core.log.Logger;
 
 /**
  * Simple factory to listen for and send messages.

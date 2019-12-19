@@ -1,4 +1,4 @@
-package taskmixer.common.concept;
+package taskmixer.core.concept;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;

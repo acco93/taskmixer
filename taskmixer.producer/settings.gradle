@@ -1,3 +1,3 @@
-include ":taskmixer.common"
-project(":taskmixer.common").projectDir = file("../taskmixer.common")
+include ":taskmixer.core"
+project(":taskmixer.core").projectDir = file("../taskmixer.core")
 

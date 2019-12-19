@@ -1,4 +1,4 @@
-package taskmixer.common.networking.factory;
+package taskmixer.core.networking.factory;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;

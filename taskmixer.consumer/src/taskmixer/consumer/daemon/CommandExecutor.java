@@ -12,9 +12,9 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Delivery;
 import com.rabbitmq.client.MessageProperties;
 
-import taskmixer.common.log.Logger;
-import taskmixer.common.message.StandardOutputLine;
-import taskmixer.common.message.StringCommand;
+import taskmixer.core.log.Logger;
+import taskmixer.core.message.StandardOutputLine;
+import taskmixer.core.message.StringCommand;
 
 public class CommandExecutor {
 

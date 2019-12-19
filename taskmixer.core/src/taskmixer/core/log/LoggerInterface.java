@@ -1,4 +1,4 @@
-package taskmixer.common.log;
+package taskmixer.core.log;
 
 /**
  * Simple logger interface.

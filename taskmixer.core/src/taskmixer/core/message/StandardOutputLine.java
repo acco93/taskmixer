@@ -1,4 +1,4 @@
-package taskmixer.common.message;
+package taskmixer.core.message;
 
 public class StandardOutputLine {
 

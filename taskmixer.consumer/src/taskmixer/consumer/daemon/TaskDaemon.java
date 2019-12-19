@@ -1,7 +1,7 @@
 package taskmixer.consumer.daemon;
 
-import taskmixer.common.networking.factory.NetworkFactory;
-import taskmixer.common.sharedknowledge.R;
+import taskmixer.core.networking.factory.NetworkFactory;
+import taskmixer.core.sharedknowledge.R;
 
 public class TaskDaemon {
 

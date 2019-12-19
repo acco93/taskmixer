@@ -2,7 +2,7 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'application'
 
-mainClassName = 'taskmixer.consumer.Main'
+mainClassName = 'taskmixer.monitor.Monitor'
 
 repositories {
       mavenCentral()
@@ -17,10 +17,10 @@ sourceSets {
 }
 
 jar {
-	baseName = 'txc'
+	baseName = 'mon'
     version =  '1.0'
    	manifest {
-      attributes 'Main-Class': 'taskmixer.consumer.Main'
+      attributes 'Main-Class': 'taskmixer.monitor.Monitor'
    }
    from {
         configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
@@ -41,5 +41,6 @@ dependencies {
 	compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.6.2'
 	compile group: 'com.google.code.gson', name: 'gson', version: '1.7.2'
 	compile 'info.picocli:picocli:4.1.2'
+	compile group: 'com.gitlab.klamonte', name: 'jexer', version: '0.3.2'
 	compile project(':taskmixer.core')	
 }

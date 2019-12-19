@@ -3,9 +3,9 @@ package taskmixer.consumer.daemon;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import taskmixer.common.log.Logger;
-import taskmixer.common.networking.factory.NetworkFactory;
-import taskmixer.common.sharedknowledge.R;
+import taskmixer.core.log.Logger;
+import taskmixer.core.networking.factory.NetworkFactory;
+import taskmixer.core.sharedknowledge.R;
 
 public class ControlDaemon {
 
